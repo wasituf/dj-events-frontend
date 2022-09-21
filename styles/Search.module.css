@@ -1,7 +1,17 @@
 .search input {
   width: 250px;
   height: 35px;
-  padding: 5px;
+  padding: 5px 10px;
   border: 1px #777 solid;
   border-radius: 5px;
+  outline: none;
+  border: none;
+  background: #f4f4f4;
+  text-align: center;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s;
+}
+
+.search input:focus {
+  box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.2);
 }

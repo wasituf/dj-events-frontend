@@ -7,7 +7,11 @@ export default function EventItem({ evt }) {
     <div className={styles.event}>
       <div className={styles.img}>
         <Image
-          src={evt.image ? evt.image : '/images/event-default.png'}
+          src={
+            evt.image.data
+              ? evt.image.data.attributes.formats.thumbnail.url
+              : '/images/event-default.png'
+          }
           alt=''
           width={170}
           height={100}
@@ -16,7 +20,7 @@ export default function EventItem({ evt }) {
 
       <div className={styles.info}>
         <span>
-          {evt.date} at {evt.time}
+          {new Date(evt.date).toLocaleDateString('en-GB')} at {evt.time}
         </span>
 
         <h3>{evt.name}</h3>

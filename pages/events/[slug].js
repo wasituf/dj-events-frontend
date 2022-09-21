@@ -5,17 +5,16 @@ import Layout from '@/components/Layout'
 import { API_URL } from '@/config/index'
 import styles from '@/styles/Event.module.css'
 
-export default function EventPage({ evt }) {
+export default function EventPage({ evt, id }) {
   const deleteEvent = e => {
     console.log('delete')
   }
 
   return (
     <Layout>
-      <h1>Hello</h1>
       <div className={styles.event}>
         <div className={styles.controls}>
-          <Link href={`/events/edit/${evt.id}`}>
+          <Link href={`/events/edit/${id}`}>
             <a>
               <FaPencilAlt /> Edit Event
             </a>
@@ -26,14 +25,19 @@ export default function EventPage({ evt }) {
         </div>
 
         <span>
-          {evt.date} at {evt.time}
+          {new Date(evt.date).toLocaleDateString('en-GB')} at {evt.time}
         </span>
 
         <h1>{evt.name}</h1>
 
-        {evt.image && (
+        {evt.image.data && (
           <div className={styles.image}>
-            <Image src={evt.image} alt='' width={960} height={600} />
+            <Image
+              src={evt.image.data.attributes.formats.large.url}
+              alt=''
+              width={960}
+              height={600}
+            />
           </div>
         )}
 
@@ -52,11 +56,15 @@ export default function EventPage({ evt }) {
   )
 }
 
+//
+
 export async function getStaticPaths() {
   const res = await fetch(`${API_URL}/api/events`)
   const events = await res.json()
 
-  const paths = events.map(evt => ({ params: { slug: evt.slug } }))
+  const paths = events.data.map(evt => ({
+    params: { slug: evt.attributes.slug },
+  }))
 
   return {
     paths,
@@ -65,24 +73,30 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params: { slug } }) {
-  const res = await fetch(`${API_URL}/api/events/${slug}`)
+  const res = await fetch(
+    `${API_URL}/api/events/?populate=*&filters[slug][$eq]=${slug}`,
+  )
   const events = await res.json()
 
   return {
     props: {
-      evt: events[0],
+      evt: events.data[0].attributes,
+      id: events.data[0].id,
     },
     revalidate: 1,
   }
 }
 
 // export async function getServerSideProps({ query: { slug } }) {
-//   const res = await fetch(`${API_URL}/api/events/${slug}`)
+//   const res = await fetch(
+//     `${API_URL}/api/events/?populate=*&filters[slug][$eq]=${slug}`,
+//   )
 //   const events = await res.json()
 
 //   return {
 //     props: {
-//       evt: events[0],
+//       evt: events.data[0].attributes,
+//       id: events.data[0].id,
 //     },
 //   }
 // }
