@@ -30,21 +30,21 @@ export default function AddEventPage() {
 
     if (hasEmptyFields) {
       toast.error('Please fill in all fields')
-    }
-
-    const res = await fetch(`${API_URL}/api/events`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    })
-
-    if (!res.ok) {
-      toast.error('Something went wrong')
     } else {
-      const evt = await res.json()
-      router.push(`/events/${evt.data.attributes.slug}`)
+      const res = await fetch(`${API_URL}/api/events`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+
+      if (!res.ok) {
+        toast.error('Something went wrong')
+      } else {
+        const evt = await res.json()
+        router.push(`/events/${evt.data.attributes.slug}`)
+      }
     }
   }
 
@@ -58,7 +58,9 @@ export default function AddEventPage() {
       <Link href='/events'>
         <a>{'<'} Go Back</a>
       </Link>
+
       <ToastContainer position='top-center' autoClose={3000} hideProgressBar />
+
       <h1>Add Event</h1>
 
       <form className={styles.form} onSubmit={handleSubmit}>

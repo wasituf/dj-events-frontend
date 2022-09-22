@@ -1,8 +1,6 @@
 import Link from 'next/link'
 
 export default function Pagination({ page, lastPage }) {
-  console.log(page)
-
   return (
     <>
       {page > 1 && (

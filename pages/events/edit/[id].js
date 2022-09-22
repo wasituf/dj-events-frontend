@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { ToastContainer, toast } from 'react-toastify'
-import { FaImage } from 'react-icons/fa'
 import 'react-toastify/dist/ReactToastify.css'
+import { FaImage } from 'react-icons/fa'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -39,21 +39,21 @@ export default function EditEventPage({ evt, id }) {
 
     if (hasEmptyFields) {
       toast.error('Please fill in all fields')
-    }
-
-    const res = await fetch(`${API_URL}/api/events/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    })
-
-    if (!res.ok) {
-      toast.error('Something went wrong')
     } else {
-      const evt = await res.json()
-      router.push(`/events/${evt.data.attributes.slug}`)
+      const res = await fetch(`${API_URL}/api/events/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
+
+      if (!res.ok) {
+        toast.error('Something went wrong')
+      } else {
+        const evt = await res.json()
+        router.push(`/events/${evt.data.attributes.slug}`)
+      }
     }
   }
 
@@ -177,15 +177,13 @@ export default function EditEventPage({ evt, id }) {
 
       <div>
         <button
-          className='btn-secondary'
+          className='btn-secondary btn-icon'
           onClick={() => {
             window.scrollTo(0, 0)
             setShowModal(true)
           }}
-          style={{ display: 'flex', alignItems: 'center' }}
         >
-          <FaImage style={{ verticalAlign: 'middle' }} size={14} />
-          <span>&nbsp;&nbsp;Set Image</span>
+          <FaImage size={14} /> Set Image
         </button>
       </div>
 
@@ -196,7 +194,7 @@ export default function EditEventPage({ evt, id }) {
   )
 }
 
-export async function getServerSideProps({ params: { id } }) {
+export async function getServerSideProps({ params: { id }, req }) {
   const res = await fetch(`${API_URL}/api/events/${id}?populate=*`)
   const evt = await res.json()
 
